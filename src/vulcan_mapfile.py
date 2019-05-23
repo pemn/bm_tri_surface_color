@@ -1,4 +1,5 @@
 #!python
+# Copyright 2019 Vale
 # parse vulcan map files using a DSL engine
 # v1.0 04/2018 paulo.ernesto
 
