@@ -6,3 +6,6 @@ create a georeferenced image with block color along a surface
 
 ## Output
 ![output](https://github.com/pemn/bm_tri_surface_color/blob/master/assets/dump0001.png)
+
+## License
+Apache 2.0
