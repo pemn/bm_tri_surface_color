@@ -1,4 +1,5 @@
 #!python
+# Copyright 2019 Vale
 # voxelscheme
 # v1.0 05/2019 paulo.ernesto
 
