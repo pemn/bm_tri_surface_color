@@ -44,7 +44,7 @@ def bm_tri_surface_color(input_tri, input_scd, input_bmf, input_var, output):
 
   grid2d = voxels.get_2d_minmax('min')
 
-  texture = np.ndarray((grid2d.shape[0], grid2d.shape[1], 3))
+  texture = np.ndarray((grid2d.shape[1], grid2d.shape[0], 3))
 
   for i in range(voxels.shape[0]):
     for j in range(voxels.shape[1]):
@@ -53,7 +53,7 @@ def bm_tri_surface_color(input_tri, input_scd, input_bmf, input_var, output):
       bm.find_xyz(*xyz)
       value_var = bm.get_string(input_var)
       value_rgb = scd[value_var]
-      texture[i,j] = value_rgb
+      texture[j, i] = value_rgb
 
 
   xyz0 = bm.to_world(*voxels.xyz([0,0,0]))
