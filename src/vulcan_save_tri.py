@@ -120,3 +120,22 @@ def vulcan_save_ireg(nodes, faces, texture, output_path, rows_cols = None):
 
 
   open(output_path, 'w').write(json.dumps(spec_json, sort_keys=True, indent=4).replace(': NaN', ' = u').replace('": ', '" = '))
+
+
+def gdal_save_geotiff(texture, gcps, output_path):
+  import gdal, osr
+
+  driver = gdal.GetDriverByName("GTiff")
+  ds = driver.Create(output_path, texture.shape[1], texture.shape[2], texture.shape[0], options = ['PHOTOMETRIC=RGB', 'PROFILE=GeoTIFF'])
+  ds.SetGCPs([gdal.GCP(gcp[0][0], gcp[0][1], gcp[0][1], gcp[1][0], gcp[1][1]) for gcp in gcps], ds.GetProjection())
+  for i in range(texture.shape[0]):
+    ds.GetRasterBand(i+1).WriteArray(texture[i, :, :])
+  ds.FlushCache()
+
+import sys
+if __name__=="__main__" and sys.argv[0].endswith('vulcan_save_tri.py'):
+  import numpy as np
+
+  texture = np.ndarray((3, 1000, 1000))
+  output = "output_raw.tiff"
+  gdal_save_geotiff(texture, [[[0,0,0], [0,0]], [texture.shape, texture.shape]], output)
