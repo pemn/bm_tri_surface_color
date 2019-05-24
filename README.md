@@ -1,5 +1,5 @@
 # bm_tri_surface_color
-Creates a georeferenced image with block color along a surface.  
+Creates a georeferenced image with block color along a surface. Also known as a Surface Map.    
 Requires the Maptek Vulcan python module to run.  
 Output is in Vulcan ireg proprietary format, which can then be coverted to a industry standard geotiff with the associated script.  
 This is because the script which generates the ireg must be run in the vulcan python enviroment, which does does not contain the gdal module by default.  
