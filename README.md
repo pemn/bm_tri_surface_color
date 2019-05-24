@@ -6,8 +6,11 @@ This is because the script which generates the ireg must be run in the vulcan py
 Once the ireg is generated, the converter script can be either run again in the same enviroment if the gdal module was manually deployed or in a anaconda/winpython enviroment which does not contain vulcan but will have the gdal module.
 
 
-## Input
-![screenshot](https://github.com/pemn/bm_tri_surface_color/blob/master/assets/screenshot1.PNG)
+## Generate ireg from vulcan data
+![screenshot1](https://github.com/pemn/bm_tri_surface_color/blob/master/assets/screenshot1.PNG)
+
+## Generate convert the vulcan ireg to a geotiff
+![screenshot2](https://github.com/pemn/bm_tri_surface_color/blob/master/assets/screenshot2.PNG)
 
 ## Output
 ![output](https://github.com/pemn/bm_tri_surface_color/blob/master/assets/dump0001.png)
