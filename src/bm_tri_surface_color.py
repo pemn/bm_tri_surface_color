@@ -38,12 +38,18 @@ def bm_tri_surface_color(input_tri, input_scd, input_bmf, input_var, output):
     xyzw = bm.get_multiple(['xworld', 'yworld', 'zworld'])
     xyzc = bm.get_multiple(['xcentre', 'ycentre', 'zcentre'])
     xyzl = bm.get_multiple(['xlength', 'ylength', 'zlength'])
-    z = tri.get_elevation(xyzw[0], xyzw[1])
-    voxels.flag_by_block(xyzc, xyzl, abs(z - xyzw[2]), 'min')
+    d = np.nan
+    try:
+      z = tri.get_elevation(xyzw[0], xyzw[1])
+      d = abs(z - xyzw[2])
+    except:
+      pass
 
+    voxels.flag_by_block(xyzc, xyzl, d, 'min')
 
   grid2d = voxels.get_2d_minmax('min')
 
+  # on the texture, i is y and x is j
   texture = np.ndarray((grid2d.shape[1], grid2d.shape[0], 3))
 
   for i in range(voxels.shape[0]):
@@ -53,8 +59,8 @@ def bm_tri_surface_color(input_tri, input_scd, input_bmf, input_var, output):
       bm.find_xyz(*xyz)
       value_var = bm.get_string(input_var)
       value_rgb = scd[value_var]
-      texture[j, i] = value_rgb
-
+      # y must be inverted to look the same way in 90o rotated models and on the image
+      texture[texture.shape[0] - j - 1, i] = value_rgb
 
   xyz0 = bm.to_world(*voxels.xyz([0,0,0]))
   xyz1 = bm.to_world(*voxels.xyz(voxels.shape))

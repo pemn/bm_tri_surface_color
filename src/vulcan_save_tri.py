@@ -110,14 +110,11 @@ def vulcan_save_ireg(nodes, faces, texture, output_path, rows_cols = None):
   output_img = os.path.splitext(output_path)[0] + '.png'
   skimage.io.imsave(output_img, texture)
 
-  # vt = [[0.0, 0.0], nodes[0].tolist(), [1.0, 1.0], nodes[-1].tolist()]
-
   if rows_cols is not None:
     vt = vulcan_texture_vt(*rows_cols)
 
     spec_json["points"] = [{"image": vt[i].tolist(),"world": nodes[i].tolist()} for i in range(len(vt))]
-    #{"image": [0.0, 0.0],"world": nodes[0].tolist()}, {"image": [1.0, 1.0], "world": nodes[-1].tolist()}]
-
+ 
 
   open(output_path, 'w').write(json.dumps(spec_json, sort_keys=True, indent=4).replace(': NaN', ' = u').replace('": ', '" = '))
 
@@ -126,7 +123,7 @@ def gdal_save_geotiff(texture, gcps, output_path):
   import gdal, osr
 
   driver = gdal.GetDriverByName("GTiff")
-  ds = driver.Create(output_path, texture.shape[1], texture.shape[2], texture.shape[0], options = ['PHOTOMETRIC=RGB', 'PROFILE=GeoTIFF'])
+  ds = driver.Create(output_path, texture.shape[2], texture.shape[1], texture.shape[0], options = ['PHOTOMETRIC=RGB', 'PROFILE=GeoTIFF'])
   ds.SetGCPs([gdal.GCP(gcp[0][0], gcp[0][1], gcp[0][1], gcp[1][0], gcp[1][1]) for gcp in gcps], ds.GetProjection())
   for i in range(texture.shape[0]):
     ds.GetRasterBand(i+1).WriteArray(texture[i, :, :])
