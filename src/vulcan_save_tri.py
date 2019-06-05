@@ -119,12 +119,17 @@ def vulcan_save_ireg(nodes, faces, texture, output_path, rows_cols = None):
   open(output_path, 'w').write(json.dumps(spec_json, sort_keys=True, indent=4).replace(': NaN', ' = u').replace('": ', '" = '))
 
 
-def gdal_save_geotiff(texture, gcps, output_path):
+def gdal_save_geotiff(texture, gcps, output_path, epsg = 29193):
   import gdal, osr
 
   driver = gdal.GetDriverByName("GTiff")
+
   ds = driver.Create(output_path, texture.shape[2], texture.shape[1], texture.shape[0], options = ['PHOTOMETRIC=RGB', 'PROFILE=GeoTIFF'])
+  srs = osr.SpatialReference() 
+  srs.ImportFromEPSG(epsg)
+  ds.SetProjection(srs.ExportToWkt())
   ds.SetGCPs([gdal.GCP(gcp[0][0], gcp[0][1], gcp[0][1], gcp[1][0], gcp[1][1]) for gcp in gcps], ds.GetProjection())
+
   for i in range(texture.shape[0]):
     ds.GetRasterBand(i+1).WriteArray(texture[i, :, :])
   ds.FlushCache()
