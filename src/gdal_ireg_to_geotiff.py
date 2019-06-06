@@ -21,7 +21,8 @@ def gdal_ireg_to_geotiff(input_ireg, output_tiff):
   source = gdal.Open(ireg_o['properties']['image'])
   rgb_array = source.ReadAsArray()
 
-  gdal_save_geotiff(rgb_array, [[gcp['world'], gcp['image']] for gcp in ireg_o['points']], output_tiff)
+  gcps = [gcp['world'] + [gcp['image'][0] * rgb_array.shape[2], gcp['image'][1] * rgb_array.shape[1]] for gcp in ireg_o['points']]
+  gdal_save_geotiff(rgb_array, gcps, output_tiff)
 
 main = gdal_ireg_to_geotiff
 
