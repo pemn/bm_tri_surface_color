@@ -5,8 +5,12 @@
 '''
 usage: $0 input_ireg*ireg output_tiff*tif,tiff,gtif,gtiff
 '''
-import sys
+import sys, os
 import numpy as np
+
+# import modules from a pyz (zip) file with same name as scripts
+sys.path.append(os.path.splitext(sys.argv[0])[0] + '.pyz')
+
 from _gui import usage_gui
 
 from vulcan_save_tri import gdal_save_geotiff

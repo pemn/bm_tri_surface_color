@@ -18,8 +18,6 @@ def vulcan_save_asc(nodes, faces, output):
   for f in faces:
     print("Index : %06d, %06d, %06d" % tuple(np.add(f,(1,1,1))), file=of)
 
-
-
 def vulcan_save_tri(nodes, faces, output):
   import vulcan
   tri = vulcan.triangulation("", "w")
@@ -87,15 +85,17 @@ def get_boilerplate_json(output_img, output_00t):
     }
   }
 
-def vulcan_register_image(output_00t, texture, xyz0, xyz1, output_path):
+def vulcan_register_image(output_00t, texture, xyz, output_path):
   import json
   output_img = os.path.splitext(output_path)[0] + '.png'
 
   spec_json = get_boilerplate_json(output_img, output_00t)
   skimage.io.imsave(output_img, texture)
   spec_json["points"] = []
-  spec_json["points"].append({"image": [0,0,0],"world": xyz0})
-  spec_json["points"].append({"image": [1,1,1],"world": xyz1})
+  spec_json["points"].append({"image": [0,0,0],"world": xyz[0]})
+  spec_json["points"].append({"image": [1,0,0],"world": xyz[1]})
+  spec_json["points"].append({"image": [1,1,0],"world": xyz[2]})
+  spec_json["points"].append({"image": [0,1,0],"world": xyz[3]})
 
   open(output_path, 'w').write(json.dumps(spec_json, sort_keys=True, indent=4).replace(': NaN', ' = u').replace('": ', '" = '))
 
@@ -119,7 +119,7 @@ def vulcan_save_ireg(nodes, faces, texture, output_path, rows_cols = None):
   open(output_path, 'w').write(json.dumps(spec_json, sort_keys=True, indent=4).replace(': NaN', ' = u').replace('": ', '" = '))
 
 # 29193
-def gdal_save_geotiff(texture, gcps, output_path, epsg = 29193):
+def gdal_save_geotiff(texture, xyz, output_path, epsg = 29193):
   import gdal, osr
   
   driver = gdal.GetDriverByName("GTiff")
@@ -133,7 +133,13 @@ def gdal_save_geotiff(texture, gcps, output_path, epsg = 29193):
   # ds.SetProjection(srs.ExportToWkt())
   #ds.SetGCPs([gdal.GCP(gcp[0][0], gcp[0][1], gcp[0][1], gcp[1][0], gcp[1][1]) for gcp in gcps], ds.GetProjection())
   #ds.SetGCPs([gdal.GCP(gcp[0][0], gcp[0][1], gcp[0][2], gcp[1][0], gcp[1][1]) for gcp in gcps], srs.ExportToWkt())
-  ds.SetGCPs([gdal.GCP(*gcp) for gcp in gcps], srs.ExportToWkt())
+  # ds.SetGCPs([gdal.GCP(*gcp) for gcp in gcps], srs.ExportToWkt())
+  gcps = []
+  gcps.append(gdal.GCP(xyz[0][0],xyz[0][1],xyz[0][2],0,0))
+  gcps.append(gdal.GCP(xyz[1][0],xyz[1][1],xyz[1][2],1,0))
+  gcps.append(gdal.GCP(xyz[2][0],xyz[2][1],xyz[2][2],1,1))
+  gcps.append(gdal.GCP(xyz[3][0],xyz[3][1],xyz[3][2],0,1))
+  ds.SetGCPs(gcps, srs.ExportToWkt())
 
   for i in range(texture.shape[0]):
     ds.GetRasterBand(i+1).WriteArray(texture[i, :, :])
@@ -145,4 +151,4 @@ if __name__=="__main__" and sys.argv[0].endswith('vulcan_save_tri.py'):
 
   texture = np.ndarray((3, 1000, 1000))
   output = "output_raw.tiff"
-  gdal_save_geotiff(texture, [[[0,0,0], [0,0]], [texture.shape, texture.shape]], output)
+  gdal_save_geotiff(texture, [texture.shape, texture.shape], output)
