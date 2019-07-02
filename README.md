@@ -15,6 +15,7 @@ Once the ireg is generated, the converter script can be either run again in the 
 ## Output Examples
 ![dump0000](https://github.com/pemn/bm_tri_surface_color/blob/master/assets/dump0000.png)  
 ![dump0001](https://github.com/pemn/bm_tri_surface_color/blob/master/assets/dump0001.png)
+![dump0002](https://github.com/pemn/bm_tri_surface_color/blob/master/assets/dump0002.png)
 
 ## License
 Apache 2.0
