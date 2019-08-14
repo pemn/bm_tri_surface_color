@@ -26,12 +26,33 @@ portal_url_default = "https://portalgisvale.maps.arcgis.com"
 
 import sys, os, os.path, time
 # import modules from a pyz (zip) file with same name as scripts
-sys.path.append(os.path.splitext(sys.argv[0])[0] + '.pyz')
+# sys.path.append(os.path.splitext(sys.argv[0])[0] + '.pyz')
+sys.path.insert(0, os.path.splitext(sys.argv[0])[0] + '.pyz')
 import pandas as pd
 
 # fix for wrong path of pythoncomXX.dll in vulcan 10.1.5
 if 'VULCAN_EXE' in os.environ:
   os.environ['PATH'] += ';' + os.environ['VULCAN_EXE'] + "/Lib/site-packages/pywin32_system32"
+
+def pyd_zip_extract():
+  from zipfile import ZipFile
+  pyz = ZipFile(os.path.splitext(sys.argv[0])[0] + '.pyz')
+  # extract any pyd library to current folder since they are not supported by zipimport
+  # also, extract modules which for other reasons do no work inside a zip
+  platform_arch = '.cp%s%s-win_amd64' % tuple(sys.version.split('.')[:2])
+  for name in pyz.namelist():
+    if re.match('[^/]+' + platform_arch + r'\.(pyd|zip)$', name, re.IGNORECASE):
+      if name.endswith('zip'):
+        # workaround for some weird bug in python 3.5
+        if sys.hexversion < 0x3070000:
+          pyz.extract(name)
+          ZipFile(name).extractall()
+          os.remove(name)
+        else:
+          ZipFile(pyz.open(name)).extractall()
+      elif not os.path.exists(name):
+        pyz.extract(name)
+
 
 def usage_gui(usage = None):
   '''
@@ -67,7 +88,7 @@ def pd_load_dataframe(input_path, condition = "", table_name = None, vl = None, 
     df = pd.read_csv(input_path, encoding="latin1")
     if len(condition) > 0:
       df.query(condition, True)
-  elif input_path.lower().endswith('xlsx'):
+  elif re.search(r'xls\w?$', input_path, re.IGNORECASE):
     if pd.__version__ < '0.20':
       import openpyxl
       wb = openpyxl.load_workbook(input_path)
@@ -86,7 +107,6 @@ def pd_load_dataframe(input_path, condition = "", table_name = None, vl = None, 
   elif input_path.lower().endswith('bmf'):
     import vulcan
     bm = vulcan.block_model(input_path)
-
     # get a DataFrame with block model data
     if vl is not None:
       vl = filter(bm.is_field, vl)
@@ -984,10 +1004,15 @@ class ArcGisField(ttk.LabelFrame):
     if not source_widget:
       return
 
+    col = self._col.get()
+    if not col or col == self._state:
+      return
+    self._state = col
+
     portal = source_widget.get()
 
     self._val['cursor'] = 'watch'
-    self._val['values'] = gis_portal_smartlist(None, portal, None, self._col.get())
+    self._val['values'] = gis_portal_smartlist(None, portal, None, col)
     self._val['cursor'] = ''
 
 class ArcGisPortal(ttk.LabelFrame):
