@@ -73,17 +73,41 @@ class VulcanScd(object):
         if v_tab in self._tab:
           self._tab = self._tab[v_tab]
 
-  def __getitem__(self, key):
+  def get_index(self, key):
     if self._def is None or self._tab is None:
       return(None)
     c = None
-    for i in range(len(self._tab)):
-      if self._tab[i].upper() == str(key).upper():
-        c = int(self._tab[i - 1])
-        break
+    if isinstance(self._tab, dict):
+      pass
+    else:
+      #numeric mode
+      # alpha mode
+      if self._tab[-1] == 'ALPHA':
+        for i in range(len(self._tab)):
+          if self._tab[i].upper() == str(key).upper():
+            c = int(self._tab[i - 1])
+            break
+      else:
+        for i in range(0,len(self._tab)-1,3):
+          if float(key) >= float(self._tab[i+1]) and float(key) < float(self._tab[i+2]):
+            c = int(self._tab[i])
+            break
+
+    return c    
+
+  def get_rgb(self, key):
+    c = self.get_index(key);
     rgb = (1,1,1)
     if c is not None and self._device_color is not None:
       for i in range(0,len(self._device_color),4):
         if int(self._device_color[i]) == c:
           rgb = [float(self._device_color[_]) / 15.0 for _ in (i+1, i+3, i+2)]
     return(rgb)
+
+  def palete_missing(self):
+    return self._device_color is None
+
+  def legend_missing(self):
+    return self._tab is None
+
+  __getitem__ = get_rgb
