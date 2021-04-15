@@ -7,15 +7,15 @@ Once the ireg is generated, the converter script can be either run again in the 
 
 
 ## Generate ireg from vulcan data
-![screenshot2](https://github.com/pemn/bm_tri_surface_color/blob/master/assets/screenshot2.png)
+![screenshot2](./assets/screenshot2.png?raw=true)
 
 ## Convert the vulcan ireg to a geotiff
-![screenshot1](https://github.com/pemn/bm_tri_surface_color/blob/master/assets/screenshot1.png)
+![screenshot1](./assets/screenshot1.png?raw=true)
 
 ## Output Examples
-![dump0000](https://github.com/pemn/bm_tri_surface_color/blob/master/assets/dump0000.png)  
-![dump0001](https://github.com/pemn/bm_tri_surface_color/blob/master/assets/dump0001.png)
-![dump0002](https://github.com/pemn/bm_tri_surface_color/blob/master/assets/dump0002.png)
+![dump0000](./assets/dump0000.png?raw=true)  
+![dump0001](./assets/dump0001.png?raw=true)
+![dump0002](./assets/dump0002.png?raw=true)
 
 ## License
 Apache 2.0
