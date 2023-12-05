@@ -20,15 +20,15 @@ geotiff_epsg|☑️|Epsg code for geotiff coordinate reference system
 
 ## 📸 Screenshots
 ### graphic interface
-![screenshot2](./assets/screenshot2.png?raw=true)
+![screenshot2](./assets/screenshot2.png?raw=true)  
 
 ### Convert the vulcan ireg to a geotiff
-![screenshot1](./assets/screenshot1.png?raw=true)
+![screenshot1](./assets/screenshot1.png?raw=true)  
 
 ### Output Examples
 ![dump0000](./assets/dump0000.png?raw=true)  
-![dump0001](./assets/dump0001.png?raw=true)
-![dump0002](./assets/dump0002.png?raw=true)
+![dump0001](./assets/dump0001.png?raw=true)  
+![dump0002](./assets/dump0002.png?raw=true)  
 ## 🧩 Compatibility
 distribution|status
 ---|---
