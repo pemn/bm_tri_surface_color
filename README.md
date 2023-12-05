@@ -1,9 +1,7 @@
 ## 📌 Description
 Creates a georeferenced image with model block/voxel color along a surface. Also known as a Surface Map.    
 Requires the Maptek Vulcan python module to run.  
-Output is in Vulcan ireg proprietary format, which can then be coverted to a industry standard geotiff using a associated script.  
-This is because the script which generates the ireg must be run in the vulcan python enviroment, which does does not contain the gdal python module by default.  
-Once the ireg is generated, the converter script can be either run again in the same enviroment if the gdal module was manually deployed or in a anaconda/winpython enviroment which does not contain vulcan but will have the gdal module.  
+Output is either in Vulcan ireg proprietary format or a industry standard geotiff (*.tiff)
 ## 📝 Parameters
 name|optional|description
 ---|---|------
@@ -15,7 +13,7 @@ mode|near|use block nearest the surface
 ||major|use the most common value out of all blocks below surface
 ||mean|if the variable is numeric, use the mean of values of all blocks below surface
 ||sum|sum of values of all blocks below surface
-output_path|❎|path to save result in one of the supported file formats
+output_path|❎|path to save result in one of the supported file formats (ireg or tiff)
 geotiff_epsg|☑️|Epsg code for geotiff coordinate reference system
 
 ## 📸 Screenshots
